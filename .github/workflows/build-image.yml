@@ -24,7 +24,9 @@ jobs:
           context: ./api
           file: api/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-api:${{ github.sha }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-api:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-api:latest
 
   build-web-image:
     runs-on: ubuntu-latest
@@ -44,7 +46,9 @@ jobs:
           context: ./web
           file: web/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-web:${{ github.sha }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-web:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-web:latest
   
   build-worker-image:
     runs-on: ubuntu-latest
@@ -64,4 +68,6 @@ jobs:
           context: worker
           file: worker/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-worker:${{ github.sha }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-worker:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-lab-worker:latest
