@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Desk</title>
+</head>
+<body>
+  <h1>Desk</h1>
+
+  <form id="new-ticket">
+    <input name="title" placeholder="Title" required>
+    <textarea name="body" placeholder="What happened?" required></textarea>
+    <button type="submit">Open ticket</button>
+  </form>
+
+  <ul id="tickets"></ul>
+
+  <script>
+    // In the cluster, point this at the API ingress host.
+    const API_BASE = "http://localhost:8000";
+
+    async function loadTickets() {
+      const response = await fetch(`${API_BASE}/tickets`);
+      const tickets = await response.json();
+      const list = document.getElementById("tickets");
+      list.replaceChildren();
+      for (const ticket of tickets) {
+        const item = document.createElement("li");
+        item.textContent = ticket.acknowledgement
+          ? `${ticket.title} — ${ticket.status} — ${ticket.acknowledgement}`
+          : `${ticket.title} — ${ticket.status}`;
+        list.appendChild(item);
+      }
+    }
+
+    document.getElementById("new-ticket").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      await fetch(`${API_BASE}/tickets`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: data.get("title"), body: data.get("body") }),
+      });
+      form.reset();
+      loadTickets();
+    });
+
+    loadTickets();
+  </script>
+</body>
+</html>
